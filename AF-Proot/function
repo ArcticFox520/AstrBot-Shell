@@ -1,0 +1,107 @@
+#!/bin/env bash
+black="\e[30m"
+red="\033[31m"
+green="\033[32m"
+yellow="\033[33m"
+blue="\033[34m"
+purple="\033[35m"
+cyan="\033[36m"
+white="\033[37m"
+background="\033[0m"
+function IncrementCounter(){
+  if [ -z ${count} ]
+  then
+    count=0
+  fi
+  ((count++))
+  case ${count} in
+    3)
+      count=0
+      return 1
+  esac
+  return 0
+}
+function getFile(){
+file="$1"
+URL="$2"
+Download(){
+  echo -e ${blue}[${green}*${blue}] ${cyan}正在下载 ${yellow}${file}${cyan}${background}
+  until ${Command}
+  do
+    if ! IncrCounter
+    then
+      echo -e ${blue}[${red}*${blue}] ${cyan}错误次数过多 ${yellow}退出${background}
+      return 1
+    fi
+    echo -e ${blue}[${red}*${blue}] ${cyan}下载失败 ${yellow}三秒后重试${background}
+    sleep 3s
+  done
+  echo -e ${blue}[${green}*${blue}] ${cyan}下载完成${background}
+  return 0
+}
+if $(command -v wget > /dev/null 2>&1) && $(wget --help | grep -q show-progress)
+then
+  Command="wget --quiet --show-progress --output-document="${file}" --continue "${URL}""
+  Download
+elif $(command -v curl > /dev/null 2>&1) && $(curl --help all | grep -q progress-bar)
+then
+  Command="curl --output "${file}" --progress-bar --location --continue-at - "${URL}""
+  Download
+elif $(command -v wget > /dev/null 2>&1)
+then
+  Command="wget --output-document="${file}" --continue "${URL}""
+  Download
+else
+  echo -e ${blue}[${red}*${blue}] ${cyan}无下载器${background}
+  return 1
+fi
+}
+function getLocation(){
+selectLocation(){
+echo
+echo -en "
+ ———————————————————
+ ${cyan}请问您的设备所在位置是? 
+    ${green}1${white}. 中国大陆 ${background}
+    ${green}2${white}. 其他位置 ${background}
+ ———————————————————
+ ${cyan}请输入数字 ${white}[1-2]: ${background}"
+read num
+case "$num" in
+  1)
+    return 0;;
+  2)
+    return 1;;
+  *)
+    echo -e "\n${blue}[${red}*${blue}] ${cyan}输入错误，保持默认：${yellow}中国大陆${background}"
+    return 0
+esac
+}
+Json=$(curl -sL --connect-timeout 5 --max-time 10 ipinfo.io/json)
+if [ -n "${Json}" ]
+then
+  if ! echo "${Json}" | grep -q error
+  then
+    if echo "${Json}" | jq -r .country | grep -q "CN"; then
+      return 0
+    else
+      return 1
+    fi
+  fi
+fi
+Json=$(curl -sL --connect-timeout 5 --max-time 10 ip-api.com/json)
+if [ -n "${Json}" ]
+then
+  if ! echo "${Json}" | grep -q fail
+  then
+    if echo "${Json}" | jq -r .countryCode | grep -q "CN"; then
+      return 0
+    else
+      return 1
+    fi
+  fi
+fi
+selectLocation
+local result=$?
+return ${result}
+}

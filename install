@@ -30,7 +30,20 @@ then
   exit
 fi
 
-import incrCounter
+function IncrementCounter(){
+  if [ -z ${count} ]
+  then
+    count=0
+  fi
+  ((count++))
+  case ${count} in
+    3)
+      count=0
+      return 1
+  esac
+  return 0
+}
+
 function getFile(){
 file="$1"
 URL="$2"
@@ -67,8 +80,7 @@ else
 fi
 }
 function AndroidInstall(){
-
-
+  
 }
 
 
