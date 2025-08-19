@@ -1,4 +1,6 @@
 #!/bin/env bash
+import log
+import returnError
 function getArchitecture(){
   local machine=$(uname -m)
   case $machine in
@@ -9,13 +11,11 @@ function getArchitecture(){
       echo aarch64
       ;;
     *)
-      echo -e ${blue}[${red}*${blue}] ${red}暂不支持的CPU${background}
-      echo -e ${blue}[${yellow}*${blue}] ${cyan}您的CPU: $yellow${machine} ${background}
-      echo -e ${blue}[${yellow}*${blue}] ${cyan}请截图以便于开发者适配${background}
-      while read
-      do
-        echo -e ${blue}[${yellow}*${blue}] ${cyan}请截图以便于开发者适配${background}
-      done
+      log.error "不支持的架构"
+      log.warn "您的CPU为 $(uname -m)"
+      log.warn "请截图以便于开发者适配"
+      returnError
       ;;
   esac
 }
+

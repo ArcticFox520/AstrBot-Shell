@@ -1,21 +1,22 @@
 #!/bin/env bash
 import incrCounter
+import log
 function getFile(){
 file="$1"
 URL="$2"
 Download(){
-  echo -e ${blue}[${green}*${blue}] ${cyan}正在下载 ${yellow}${file}${cyan}${background}
+  log.info "正在下载 ${file}"
   until ${Command}
   do
     if ! IncrCounter
     then
-      echo -e ${blue}[${red}*${blue}] ${cyan}错误次数过多 ${yellow}退出${background}
+      log.error "错误次数过多"
       return 1
     fi
-    echo -e ${blue}[${red}*${blue}] ${cyan}下载失败 ${yellow}三秒后重试${background}
+    log.warn "下载失败 三秒后重试"
     sleep 3s
   done
-  echo -e ${blue}[${green}*${blue}] ${cyan}下载完成${background}
+  log.success "下载完成"
   return 0
 }
 if $(command -v wget > /dev/null 2>&1) && $(wget --help | grep -q show-progress)
@@ -31,7 +32,7 @@ then
   Command="wget --output-document="${file}" --continue "${URL}""
   Download
 else
-  echo -e ${blue}[${red}*${blue}] ${cyan}无下载器${background}
+  log.error "无下载器"
   return 1
 fi
 }

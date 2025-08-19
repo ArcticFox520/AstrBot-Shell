@@ -6,7 +6,7 @@ if [ -x "$(command -v whiptail)" ];then
 elif [ -x "$(command -v dialog)" ];then
   echo dialog
 else
-  echo -e ${blue}[${red}*${blue}] ${cyan}无TUI软件${background}
+  log.error "无TUI软件"
   returnError
 fi
 }

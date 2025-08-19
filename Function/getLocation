@@ -1,5 +1,6 @@
 #!/bin/env bash
 import setColour
+import log
 function getLocation(){
 selectLocation(){
 echo
@@ -17,7 +18,7 @@ case "$num" in
   2)
     return 1;;
   *)
-    echo -e "\n${blue}[${red}*${blue}] ${cyan}输入错误，保持默认：${yellow}中国大陆${background}"
+    log.warn "输入错误 保持默认 中国大陆"
     return 0
 esac
 }

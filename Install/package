@@ -2,27 +2,28 @@
 import getLocation
 import setColour
 import getFile
+import log
 Package=("tar" "gzip" "xz-utils" "unzip" "tmux" "wget" "curl" "pv" "git" "jq" "gpg")
+log.info "正在更新 软件源列表"
 apt -y update
 for PKG in ${Package[@]}
 do
   if ! dpkg -s ${PKG} > /dev/null 2>&1
   then
-    echo -e ${green}正在安装 ${yellow}${PKG}${background}
+    log.info "正在安装 ${PKG}"
     until apt install -y ${PKG}
     do
-      echo -e ${red}安装失败 3秒后重试${background}
+      log.warn "安装失败 3秒后重试"
       sleep 3s
     done
-    echo -e ${green}安装完成${background}
+    log.success "安装成功"
   fi
 done
 if dpkg -s python3.10
 then
-  echo -e ${blue}[${green}*${blue}] ${cyan}Python3.10 ${yellow}已安装${background}
-  exit 0
+  log.success "Python3.10 已经安装"
 else
-  echo -e ${blue}[${green}*${blue}] ${cyan}正在安装 ${yellow}Python3.10${background}
+  log.info "正在安装 Python3.10"
 fi
 if getLocation
 then
