@@ -1,0 +1,18 @@
+#!/bin/env bash
+import setColour
+function setMenuSize(){
+local HEIGHT=$(($(tput lines) - 5))
+local WIDTH=$(($(tput cols) - 5))
+local OPTION=$((${HEIGHT} - 7))
+if (( $HEIGHT <= 3 ));then
+  echo -e ${blue}[${red}*${blue}] ${cyan}您的屏幕高度过低.${background}
+  echo -e ${blue}[${red}*${blue}] ${cyan}考虑缩小终端字体.${background}
+  exit
+fi
+if (( $WIDTH <= 0 ));then
+  echo -e ${blue}[${red}*${blue}] ${cyan}您的屏幕宽度过窄.${background}
+  echo -e ${blue}[${red}*${blue}] ${cyan}考虑缩小终端字体.${background}
+  exit
+fi
+echo ${HEIGHT} ${WIDTH} ${OPTION}
+}

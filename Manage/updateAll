@@ -1,0 +1,16 @@
+#!/bin/env bash
+import setColour
+
+function updateAll(){
+echo -e ${blue}[${green}*${blue}] ${cyan}正在更新 ${yellow}AstrBot${background}
+if ! git pull
+then
+  returnError
+fi
+echo -e ${blue}[${green}*${blue}] ${cyan}正在更新 ${yellow}依赖${background}
+if ! uv sync
+then
+  returnError
+fi
+echo -ne ${blue}[${green}*${blue}] ${cyan}更新完成 ${yellow}回车返回${background};read
+}

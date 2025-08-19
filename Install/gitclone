@@ -1,0 +1,29 @@
+#!/bin/env bash
+import getLocation
+import setColour
+import gitCR
+import getFile
+echo -e ${blue}[${green}*${blue}] ${cyan}正在克隆 ${yellow}AstrBot${background}
+gitCR clone AstrBotDevs/AstrBot
+cd AstrBot
+gitCR release dist.zip AstrBotDevs/AstrBot dist.zip
+if [ ! -d data ]
+then
+  mkdir data
+fi
+echo -e ${blue}[${green}*${blue}] ${cyan}正在解压 ${yellow}面板文件${background}
+size=$(unzip -l dist.zip | wc -l)
+size=$(expr ${size} - 4)
+if unzip dist.zip -d data/ | pv -l -s ${size} > /dev/null
+then
+  rm -rvf dist.zip
+else
+  echo -e ${blue}[${red}*${blue}] ${yellow}解压失败${background}
+  returnError
+fi
+echo -e ${blue}[${green}*${blue}] ${cyan}正在依赖${background}
+if ! uv sync
+then
+  echo -e ${blue}[${red}*${blue}] ${yellow}依赖安装失败${background}
+  returnError
+fi

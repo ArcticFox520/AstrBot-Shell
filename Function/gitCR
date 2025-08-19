@@ -1,0 +1,42 @@
+#!/bin/env bash
+import returnError
+import getLocation
+import getFile
+# 末尾必须带 /
+export GHP="https://gh.arcticfox.top/"
+function gitCR(){
+gitClone(){
+if getLocation
+then
+  if ! git clone --depth=1 ${GHP}https://github.com/$1
+  then
+    returnError
+  fi
+else
+  if ! git clone --depth=1 https://github.com/$1
+  then
+    returnError
+  fi
+fi
+}
+gitRelease(){
+if getLocation
+then
+  if ! getFile $1 ${GHP}https://github.com/$2/releases/latest/download/$3
+  then
+    returnError
+  fi
+else
+  if ! getFile $1 https://github.com/$2/releases/latest/download/$3
+  then
+    returnError
+  fi
+fi
+}
+case $1 in
+clone)
+  gitClone $2;;
+release)
+  gitRelease $2 $3 $4;;
+esac
+}

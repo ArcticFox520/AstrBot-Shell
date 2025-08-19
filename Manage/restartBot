@@ -1,0 +1,31 @@
+#!/bin/env bash
+import setColour
+import setMenuSize
+import setMsgboxSize
+import setTUISoftware
+import manageSession
+import require
+require startBackground
+require startForeground
+TitleText=AstrBot-Shell
+
+function restartBot(){
+if [ -e data/cmd_config.json ]
+then
+  port=$(jq -r .dashboard.port data/cmd_config.json)
+else
+  port=6185
+fi
+if manageSession list ${TitleText}
+then
+  startBackground
+elif curl -sL http://localhost:${port}
+then
+  PID=$(ps all | grep "uv run main.py" | sed '/grep/d' | awk '{print $3}')
+  if [ -n ${PID} ];then
+    kill -9 ${PID}
+    return
+  fi
+  startForeground
+fi
+}

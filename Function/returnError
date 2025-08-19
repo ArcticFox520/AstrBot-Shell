@@ -1,0 +1,8 @@
+#!/bin/env bash
+import setColour
+function returnError(){
+while read
+do
+  echo -ne ${blue}[${yellow}*${blue}] ${cyan}请截图以便于开发者检查${background}
+done
+}

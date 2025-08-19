@@ -1,0 +1,37 @@
+#!/bin/env bash
+import incrCounter
+function getFile(){
+file="$1"
+URL="$2"
+Download(){
+  echo -e ${blue}[${green}*${blue}] ${cyan}正在下载 ${yellow}${file}${cyan}${background}
+  until ${Command}
+  do
+    if ! IncrCounter
+    then
+      echo -e ${blue}[${red}*${blue}] ${cyan}错误次数过多 ${yellow}退出${background}
+      return 1
+    fi
+    echo -e ${blue}[${red}*${blue}] ${cyan}下载失败 ${yellow}三秒后重试${background}
+    sleep 3s
+  done
+  echo -e ${blue}[${green}*${blue}] ${cyan}下载完成${background}
+  return 0
+}
+if $(command -v wget > /dev/null 2>&1) && $(wget --help | grep -q show-progress)
+then
+  Command="wget --quiet --show-progress --output-document="${file}" --continue "${URL}""
+  Download
+elif $(command -v curl > /dev/null 2>&1) && $(curl --help all | grep -q progress-bar)
+then
+  Command="curl --output "${file}" --progress-bar --location --continue-at - "${URL}""
+  Download
+elif $(command -v wget > /dev/null 2>&1)
+then
+  Command="wget --output-document="${file}" --continue "${URL}""
+  Download
+else
+  echo -e ${blue}[${red}*${blue}] ${cyan}无下载器${background}
+  return 1
+fi
+}

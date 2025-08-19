@@ -1,0 +1,24 @@
+#!/bin/env bash
+import setColour
+import setMenuSize
+import setMsgboxSize
+import setTUISoftware
+import manageSession
+TitleText=AstrBot-Shell
+
+function startForeground(){
+if manageSession list ${TitleText}
+then
+  if $(setTUISoftware) --title "${TitleText}"  \
+  --yesno "${TitleText} [已经启动]" \
+  --yes-button "打开日志" --no-button "返回菜单" \
+  $(setMsgboxSize)
+  then
+    manageSession log ${TitleText}
+  fi
+else
+  echo -e ${blue}[${green}*${blue}] ${cyan}正在启动${background}
+  uv run main.py
+  echo -ne ${blue}[${green}*${blue}] ${cyan}回车返回${background};read
+fi
+}

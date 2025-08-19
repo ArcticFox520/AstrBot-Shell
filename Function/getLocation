@@ -1,0 +1,51 @@
+#!/bin/env bash
+import setColour
+function getLocation(){
+selectLocation(){
+echo
+echo -en "
+ ———————————————————
+ ${cyan}请问您的设备所在位置是? 
+    ${green}1${white}. 中国大陆 ${background}
+    ${green}2${white}. 其他位置 ${background}
+ ———————————————————
+ ${cyan}请输入数字 ${white}[1-2]: ${background}"
+read num
+case "$num" in
+  1)
+    return 0;;
+  2)
+    return 1;;
+  *)
+    echo -e "\n${blue}[${red}*${blue}] ${cyan}输入错误，保持默认：${yellow}中国大陆${background}"
+    return 0
+esac
+}
+Json=$(curl -sL --connect-timeout 5 --max-time 10 ipinfo.io/json)
+if [ -n "${Json}" ]
+then
+  if ! echo "${Json}" | grep -q error
+  then
+    if echo "${Json}" | jq -r .country | grep -q "CN"; then
+      return 0
+    else
+      return 1
+    fi
+  fi
+fi
+Json=$(curl -sL --connect-timeout 5 --max-time 10 ip-api.com/json)
+if [ -n "${Json}" ]
+then
+  if ! echo "${Json}" | grep -q fail
+  then
+    if echo "${Json}" | jq -r .countryCode | grep -q "CN"; then
+      return 0
+    else
+      return 1
+    fi
+  fi
+fi
+selectLocation
+local result=$?
+return ${result}
+}

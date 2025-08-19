@@ -1,0 +1,75 @@
+#!/bin/env bash
+import setColour
+import setMenuSize
+import setMsgboxSize
+import setTUISoftware
+import require
+TitleText=AstrBot-Shell
+require startBackground
+require startForeground
+require stopBot
+require restartBot
+require openLog
+require managePlugin
+require updateAll
+#require otherFunction
+
+function MainMenu(){
+Number=$($(setTUISoftware) \
+--title "${TitleText}" \
+--menu "请选择操作: " \
+$(setMenuSize) \
+"1" "启动运行" \
+"2" "前台启动" \
+"3" "停止运行" \
+"4" "重新启动" \
+"5" "打开日志" \
+"6" "插件管理" \
+"7" "全部更新" \
+"8" "其他功能" \
+"9" "进入bash" \
+"0" "退出菜单" \
+3>&1 1>&2 2>&3)
+case ${Number} in
+startBackground)
+    startBackground
+  ;;
+startForeground)
+    startForeground
+  ;;
+stopBot)
+    stopBot)
+  ;;
+restartBot)
+    restartBot)
+  ;;
+openLog)
+    openLog)
+  ;;
+managePlugin)
+    managePlugin
+  ;;
+updateAll)
+    updateAll
+  ;;
+otherFunction)
+    $(setTUISoftware) --title "${TitleText}"  \
+    --msgbox "未完工" \
+    $(setMsgboxSize)
+  ;;
+enterBash)
+    exec bash
+  ;;
+exitMenu)
+    return 2
+  ;;
+esac
+}
+while true
+do
+  MainMenu
+  case $? in
+  2)
+    exit
+  esac
+done

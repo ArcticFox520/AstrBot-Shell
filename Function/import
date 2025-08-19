@@ -1,0 +1,4 @@
+#!/bin/env bash
+Path=${AstrBot_Shell_HOME}
+source ${Path}/Function/$@
+

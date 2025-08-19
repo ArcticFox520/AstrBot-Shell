@@ -1,0 +1,21 @@
+#!/bin/env bash
+function getArchitecture(){
+  local machine=$(uname -m)
+  case $machine in
+    x86_64|x64)
+      echo x86_64
+      ;;
+    aarch64|arm64)
+      echo aarch64
+      ;;
+    *)
+      echo -e ${blue}[${red}*${blue}] ${red}暂不支持的CPU${background}
+      echo -e ${blue}[${yellow}*${blue}] ${cyan}您的CPU: $yellow${machine} ${background}
+      echo -e ${blue}[${yellow}*${blue}] ${cyan}请截图以便于开发者适配${background}
+      while read
+      do
+        echo -e ${blue}[${yellow}*${blue}] ${cyan}请截图以便于开发者适配${background}
+      done
+      ;;
+  esac
+}

@@ -1,0 +1,64 @@
+#!/bin/env bash
+import getLocation
+import setColour
+import getFile
+Package=("tar" "gzip" "xz-utils" "unzip" "tmux" "wget" "curl" "pv" "git" "jq" "gpg")
+apt -y update
+for PKG in ${Package[@]}
+do
+  if ! dpkg -s ${PKG} > /dev/null 2>&1
+  then
+    echo -e ${green}正在安装 ${yellow}${PKG}${background}
+    until apt install -y ${PKG}
+    do
+      echo -e ${red}安装失败 3秒后重试${background}
+      sleep 3s
+    done
+    echo -e ${green}安装完成${background}
+  fi
+done
+if dpkg -s python3.10
+then
+  echo -e ${blue}[${green}*${blue}] ${cyan}Python3.10 ${yellow}已安装${background}
+  exit 0
+else
+  echo -e ${blue}[${green}*${blue}] ${cyan}正在安装 ${yellow}Python3.10${background}
+fi
+if getLocation
+then
+  VersionArray=("noble" "jammy" "focal")
+  for i in "${VersionArray[@]}"
+  do
+    if grep -qi "${i}" /etc/issue || grep -qi "${i}" /etc/os-release
+    then
+      Version="${i}"
+      break
+    fi
+  done
+  deadsnakes-ubuntu-ppa-noble.sources
+  SourcesListFile="/etc/apt/sources.list.d/deadsnakes-ubuntu-ppa-${Version}.list"
+  SourcesListContent="deb https://launchpad.proxy.ustclug.org/deadsnakes/ppa/ubuntu ${Version} main"
+  GpgFile="/etc/apt/trusted.gpg.d/deadsnakes-ubuntu-apps.gpg"
+  echo ${SourcesListContent} > ${SourcesListFile}
+  GpgFileURL="https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xf23c5a6cf475977595c89f51ba6932366a755776"
+  getFile deadsnakes-ubuntu-apps.gpg ${GpgFileURL}
+  if [ -e ${GpgFile} ];then
+    rm ${GpgFile}
+  fi
+  gpg --dearmor -o ${GpgFile} deadsnakes-ubuntu-apps.gpg
+  apt -y update
+  apt install -y python3.10
+  rm -rf deadsnakes-ubuntu-apps.gpg
+else
+  if ! dpkg -s software-properties-common > /dev/null 2>&1
+  then
+    apt install -y software-properties-common
+  fi
+  until echo -e '\n' | add-apt-repository ppa:deadsnakes/ppa
+  do
+    echo -e ${red}添加PPA仓库失败 3秒后重试${background}
+    sleep 3s
+  done
+  apt -y update
+  apt install -y python3.10
+fi

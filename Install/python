@@ -1,0 +1,31 @@
+#!/bin/env bash
+import getLocation
+import setColour
+import getFile
+import getArchitecture
+import returnError
+import gitCR
+echo -e ${blue}[${green}*${blue}] ${cyan}开始安装 ${yellow}UV${background}
+gitCR release UV.tar.gz astral-sh/uv uv-$(getArchitecture)-unknown-linux-gnu.tar.gz
+${UVURL}
+mkdir UVdir
+if ! pv UV.tar.gz | tar -zxf - -C UVdir
+then
+  echo -e ${red}解压失败${background}
+  returnError
+fi
+mv UVdir/$(ls UVdir) /usr/local/UV
+rm -rvf UVdir UV.tar.gz
+rm -rf /usr/local/UV > /dev/null 2>&1
+echo '
+#Python.UV
+export PATH=$PATH:/usr/local/UV
+' >> /etc/profile
+export PATH=$PATH:/usr/local/UV
+echo -e ${blue}[${green}*${blue}] ${cyan}正在换源${background}
+mkdir -p $HOME/.config/uv/
+echo '
+[[index]]
+url = "https://mirrors.cernet.edu.cn/pypi/web/simple"
+default = true
+' > $HOME/.config/uv/uv.toml
