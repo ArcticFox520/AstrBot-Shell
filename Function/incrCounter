@@ -1,5 +1,5 @@
 #!/bin/env bash
-function IncrementCounter(){
+function IncrCounter(){
   if [ -z ${count} ]
   then
     count=0

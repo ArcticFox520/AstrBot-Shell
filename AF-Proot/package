@@ -1,1 +1,30 @@
 #!/bin/env bash
+source "$(dirname "${BASH_SOURCE[0]}")./function"
+Package=("tar" "gzip" "xz-utils" "unzip" "wget" "curl" "pv" "git" "jq")
+if getLocation
+then
+  echo '
+# The termux repository mirror
+deb https://mirrors.cernet.edu.cn/termux/apt/termux-main stable main
+' > $PREFIX/etc/apt/sources.list
+else
+  echo '
+# The termux repository
+deb https://packages-cf.termux.dev/apt/termux-main stable main
+' > $PREFIX/etc/apt/sources.list
+fi
+log.info "正在更新 软件源列表"
+apt -y update
+for PKG in ${Package[@]}
+do
+  if ! dpkg -s ${PKG} > /dev/null 2>&1
+  then
+    log.info "正在安装 ${PKG}"
+    until apt install -y ${PKG}
+    do
+      log.warn "安装失败 3秒后重试"
+      sleep 3s
+    done
+    log.success "安装成功"
+  fi
+done
