@@ -6,3 +6,28 @@ import log
 import getFile
 import getLocation
 
+getPipUrl="https://bootstrap.pypa.io/get-pip.py"
+getFile get-pip.py ${getPipUrl}
+
+log.info "开始安装 pip包管理器"
+if python3.10 get-pip.py
+then
+  log.success "安装成功"
+else
+  log.error "安装失败"
+  exit 1
+fi
+
+if getLocation
+then
+  mirror="https://mirrors.cernet.edu.cn/pypi/web/simple"
+else
+  mirror="https://pypi.org/simple"
+fi
+pip config set global.index-url ${mirror}
+if ! pip config set global.index-url ${mirror}
+then
+  log.success "设置成功"
+else
+  log.error "设置失败"
+fi

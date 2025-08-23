@@ -34,7 +34,9 @@ else
   exit 1
 fi
 log.info "正在安装 依赖文件"
-if uv sync
+python3 -m venv ./venv
+source venv/bin/activate
+if python3.10 -m pip install -r requirements.txt
 then
   log.success "依赖安装成功"
 else

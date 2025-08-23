@@ -2,5 +2,5 @@
   "TerminalMultiplexer": "tmux",
   "TitleText": "AstrBot-Shell",
   "SessionName": "AstrBot",
-  "StartCommand": "uv run main.py"
+  "StartCommand": "python3.10 main.py"
 }

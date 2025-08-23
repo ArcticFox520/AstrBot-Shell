@@ -5,7 +5,7 @@ source ${Path}/Function/returnError
 
 InstallList=(
   "package"
-  "uv"
+  "pip"
   "gitclone"
 )
 
