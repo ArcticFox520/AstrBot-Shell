@@ -163,7 +163,6 @@ then
   else
     return 1
   fi
-  fi
 else
   if git clone --depth=1 --branch=$1 https://github.com/$2
   then
@@ -251,31 +250,28 @@ apt -y update
 log.info "更新完成"
 }
 package(){
-Package=("git")
-for PKG in ${Package[@]}
-do
-  if ! dpkg -s ${PKG} > /dev/null 2>&1
-  then
-    setSourcList
-    log.info "正在安装 ${PKG}"
-    until apt install -y ${PKG}
-    do
-      log.warn "安装失败 3秒后重试"
-      sleep 3s
-    done
-    log.success "安装成功"
-  fi
-done
+if ! dpkg -s git > /dev/null 2>&1
+then
+  setSourcList
+  log.info "正在安装 ${PKG}"
+  until apt install -y ${PKG}
+  do
+    log.warn "安装失败 3秒后重试"
+    sleep 3s
+  done
+  log.success "安装成功"
+fi
 }
 package
 log.info "正在克隆 AF-Proot"
-if gitClone clone main ArcticFox520/AF-Proot
+if gitCR clone main ArcticFox520/AF-Proot
 then
   log.success "克隆成功"
 else
   log.error "克隆失败"
+  exit
 fi
-gitClone raw install ArcticFox520/AstrBot-Shell main install
+gitCR raw install ArcticFox520/AstrBot-Shell main install
 export custom="$HOME/custom"
 bash AF-Proot/run
 exit
@@ -297,29 +293,27 @@ apt -y update
 log.info "更新完成"
 }
 package(){
-Package=("git")
-for PKG in ${Package[@]}
-do
-  if ! dpkg -s ${PKG} > /dev/null 2>&1
-  then
-    setSourcList
-    log.info "正在安装 ${PKG}"
-    until apt install -y ${PKG}
-    do
-      log.warn "安装失败 3秒后重试"
-      sleep 3s
-    done
-    log.success "安装成功"
-  fi
-done
-}
-log.info "正在克隆 AstrBot-Shell"
-if gitClone clone main ArcticFox520/AstrBot-Shell
+if ! dpkg -s git > /dev/null 2>&1
 then
-  log.success "克隆成功"
-else
-  log.error "克隆失败"
+  setSourcList
+  log.info "正在安装 ${PKG}"
+  until apt install -y ${PKG}
+  do
+    log.warn "安装失败 3秒后重试"
+    sleep 3s
+  done
+  log.success "安装成功"
 fi
+}
+package
+log.info "正在克隆 AstrBot-Shell"
+# if gitCR clone main ArcticFox520/AstrBot-Shell
+# then
+  # log.success "克隆成功"
+# else
+  # log.error "克隆失败"
+  # exit
+# fi
 bash AstrBot-Shell/run
 }
 

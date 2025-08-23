@@ -13,7 +13,6 @@ then
   else
     return 1
   fi
-  fi
 else
   if git clone --depth=1 --branch=$1 https://github.com/$2
   then

@@ -1,34 +1,43 @@
 #!/bin/env bash
 Path=$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
-source ${Path}/../function/import
+source ${Path}/../Function/import
 
 import log
 import gitCR
 import getFile
-import setColour
-import returnError
 import getLocation
 import getArchitecture
 
-echo -e ${blue}[${green}*${blue}] ${cyan}开始安装 ${yellow}UV${background}
+if [ -x "$(command -v uv)" ]
+then
+  log.info "UV包管理器 已安装"
+  exit 0
+else
+  rm -rf /usr/local/UV > /dev/null 2>&1
+fi
 log.info "开始安装 UV包管理器"
 if ! gitCR release UV.tar.gz astral-sh/uv uv-$(getArchitecture)-unknown-linux-gnu.tar.gz
 then
   returnError
 fi
 mkdir UVdir
-if ! pv UV.tar.gz | tar -zxf - -C UVdir
+log.info "正在解压 UV.tar.gz"
+if pv UV.tar.gz | tar -zxf - -C UVdir
 then
+  log.success "解压成功"
+else
   log.error "解压失败"
-  returnError
+  exit 1
 fi
 mv UVdir/$(ls UVdir) /usr/local/UV
 rm -rvf UVdir UV.tar.gz
-rm -rf /usr/local/UV > /dev/null 2>&1
+if ! grep -q "Python.UV" /etc/profile
+then
 echo '
 #Python.UV
 export PATH=$PATH:/usr/local/UV
 ' >> /etc/profile
+fi
 export PATH=$PATH:/usr/local/UV
 mkdir -p $HOME/.config/uv/
 echo '
@@ -36,3 +45,4 @@ echo '
 url = "https://mirrors.cernet.edu.cn/pypi/web/simple"
 default = true
 ' > $HOME/.config/uv/uv.toml
+source /etc/profile

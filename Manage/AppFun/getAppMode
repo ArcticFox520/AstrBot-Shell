@@ -1,7 +1,7 @@
 #!/bin/env bash
-import manageSession
-
 Path=$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
+source ${Path}/../../Function/import
+import manageSession
 
 # CP: Config Path
 CP="../../config.json"
@@ -19,6 +19,7 @@ function getAppMode(){
   then
     return 1
   elif ps all | sed '/grep/d' | sed '/dialog/d' | sed '/whiptail/d' | grep -q "$SC"
+  then
     return 2
   else
     return 0

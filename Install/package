@@ -1,6 +1,6 @@
 #!/bin/env bash
 Path=$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
-source ${Path}/../function/import
+source ${Path}/../Function/import
 
 import log
 import getFile
@@ -23,9 +23,10 @@ do
     log.success "安装成功"
   fi
 done
-if dpkg -s python3.10
+if dpkg -s python3.10 > /dev/null 2>&1
 then
   log.success "Python3.10 已经安装"
+  exit 0
 else
   log.info "正在安装 Python3.10"
 fi
@@ -40,7 +41,6 @@ then
       break
     fi
   done
-  deadsnakes-ubuntu-ppa-noble.sources
   SourcesListFile="/etc/apt/sources.list.d/deadsnakes-ubuntu-ppa-${Version}.list"
   SourcesListContent="deb https://launchpad.proxy.ustclug.org/deadsnakes/ppa/ubuntu ${Version} main"
   GpgFile="/etc/apt/trusted.gpg.d/deadsnakes-ubuntu-apps.gpg"

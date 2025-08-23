@@ -1,4 +1,4 @@
-function ManageSession(){
+function manageSession(){
 case "$1" in
 tmux)
   case "$2" in
@@ -11,7 +11,7 @@ tmux)
       return $?
     ;;
     restart)
-      tmux kill-session -t "$3" && tmux new -s "$3" -d "$4" > /dev/null
+      $(tmux kill-session -t "$3" && tmux new -s "$3" -d "$4") > /dev/null
       return $?
     ;;
     log)
@@ -19,7 +19,7 @@ tmux)
       return $?
     ;;
     list)
-      tmux ls | grep -q "$3"
+      tmux ls 2>&1 | grep -q "$3"
       return $?
     ;;
   esac
@@ -31,22 +31,22 @@ screen)
       return $?
       ;;
     stop)
-      Session=$(screen -ls | grep "$3" | awk '{print $1}')
+      Session=$(screen -ls 2>&1 | grep "$3" | awk '{print $1}')
       screen -X -S ${Session} quit
       return $?
       ;;
     restart)
-      Session=$(screen -ls | grep "$3" | awk '{print $1}')
+      Session=$(screen -ls 2>&1 | grep "$3" | awk '{print $1}')
       screen -X -S ${Session} quit && screen -S ${Session} -d -m bash -c "$4"
       return $?
       ;;
     log)
-      Session=$(screen -ls | grep "$3" | awk '{print $1}')
+      Session=$(screen -ls 2>&1 | grep "$3" | awk '{print $1}')
       screen -r ${Session}
       return $?
       ;;
     list)
-      screen -ls | grep -q "$3"
+      screen -ls 2>&1 | grep -q "$3"
       return $?
       ;;
   esac

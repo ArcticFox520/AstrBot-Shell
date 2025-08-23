@@ -1,9 +1,11 @@
 #!/bin/env bash
+Path=$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
+source ${Path}/../Function/import
+
 import setMenuSize
 import setMsgboxSize
 import setTUISoftware
 
-Path=$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
 # CP: Config Path
 CP="../config.json"
 # TM: Terminal Multiplexer
@@ -30,44 +32,45 @@ $(setMenuSize) \
 "8" "进入bash" \
 "0" "退出菜单" \
 3>&1 1>&2 2>&3)
+result=$?
 case ${Number} in
-startBackground)
-    source ${Path}/AppFun/startApp SBG
+1)
+    bash ${Path}/AppFun/startApp SBG
   ;;
-startForeground)
-    source ${Path}/AppFun/startApp SFG
+2)
+    bash ${Path}/AppFun/startApp SFG
   ;;
-stopBot)
-    source ${Path}/AppFun/stopApp
+3)
+    bash ${Path}/AppFun/stopApp
   ;;
-restartBot)
-    source ${Path}/AppFun/restartApp
+4)
+    bash ${Path}/AppFun/restartApp
   ;;
-openLog)
-    source ${Path}/AppFun/logApp
+5)
+    bash ${Path}/AppFun/logApp
   ;;
-updateAll)
-    source ${Path}/updateAll
+6)
+    bash ${Path}/updateAll
   ;;
-otherFunction)
+7)
     $(setTUISoftware) --title "$TT"  \
     --msgbox "未完工" \
     $(setMsgboxSize)
     #source ${Path}/otherFunction
   ;;
-enterBash)
+8)
     exec bash
   ;;
-exitMenu)
-    return 2
+0)
+    exit
   ;;
 esac
 }
 while true
 do
   MainMenu
-  case $? in
-  2)
+  case ${result} in
+  1)
     exit
   esac
 done

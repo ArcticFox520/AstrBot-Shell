@@ -1,12 +1,13 @@
 #!/bin/env bash
 Path=$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
-source ${Path}/../function/import
+source ${Path}/../Function/import
 
 import log
 import gitCR
 import getFile
-import setColour
 import getLocation
+import returnError
+source /etc/profile
 
 log.info "正在克隆 AstrBot"
 if gitCR clone master AstrBotDevs/AstrBot
@@ -14,7 +15,7 @@ then
   log.success "克隆成功"
 else
   log.error "克隆失败"
-  returnError
+  exit 1
 fi
 cd AstrBot
 gitCR release dist.zip AstrBotDevs/AstrBot dist.zip
@@ -30,7 +31,7 @@ then
   rm -rvf dist.zip
 else
   log.error "解压失败"
-  returnError
+  exit 1
 fi
 log.info "正在安装 依赖文件"
 if uv sync
@@ -38,5 +39,5 @@ then
   log.success "依赖安装成功"
 else
   log.error "依赖安装失败"
-  returnError
+  exit 1
 fi

@@ -1,12 +1,13 @@
 #!/bin/env bash
+Path=$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
+source ${Path}/../../Function/import
+source ${Path}/getAppMode
+
 import log
 import setColour
 import setMsgboxSize
 import setTUISoftware
 import manageSession
-
-Path=$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
-source ${Path}/getAppMode
 
 # CP: Config Path
 CP="../../config.json"
@@ -40,30 +41,28 @@ function startForeground(){
   "$SC"
   echo -en ${blue}[${green}*${blue}] ${cyan}回车返回${background};read
 }
-function startApp(){
-  if getAppMode "$SN" "$SC"
-  then
-    case ${SM} in
-    SBG)
-        startBackground
+if getAppMode "$SN" "$SC"
+then
+  case ${SM} in
+  SBG)
+      startBackground
+    ;;
+  SFG)
+      startForeground
+    ;;
+  esac
+else
+  getAppMode "$SN" "$SC"
+  case $? in
+    1)
+      $(setTUISoftware) --title "$TT"  \
+      --msgbox "$SN 目前处于 [$TM]" \
+      $(setMsgboxSize)
       ;;
-    SFG)
-        startForeground
+    2)
+      $(setTUISoftware) --title "$TT"  \
+      --msgbox "$SN 目前处于 [前台]" \
+      $(setMsgboxSize)
       ;;
-    esac
-  else
-    getAppMode "$SN" "$SC"
-    case $? in
-      1)
-        $(setTUISoftware) --title "$TT"  \
-        --msgbox "$SN 目前处于 [$TM]" \
-        $(setMsgboxSize)
-        ;;
-      2)
-        $(setTUISoftware) --title "$TT"  \
-        --msgbox "$SN 目前处于 [前台]" \
-        $(setMsgboxSize)
-        ;;
-    esac
-  fi
-}
+  esac
+fi
