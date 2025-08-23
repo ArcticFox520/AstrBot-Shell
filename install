@@ -307,13 +307,13 @@ fi
 }
 package
 log.info "正在克隆 AstrBot-Shell"
-# if gitCR clone main ArcticFox520/AstrBot-Shell
-# then
-  # log.success "克隆成功"
-# else
-  # log.error "克隆失败"
-  # exit
-# fi
+if gitCR clone main ArcticFox520/AstrBot-Shell
+then
+  log.success "克隆成功"
+else
+  log.error "克隆失败"
+  exit
+fi
 bash AstrBot-Shell/run
 }
 
