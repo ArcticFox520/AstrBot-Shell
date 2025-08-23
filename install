@@ -253,8 +253,8 @@ package(){
 if ! dpkg -s git > /dev/null 2>&1
 then
   setSourcList
-  log.info "正在安装 ${PKG}"
-  until apt install -y ${PKG}
+  log.info "正在安装 git"
+  until apt install -y git
   do
     log.warn "安装失败 3秒后重试"
     sleep 3s
@@ -296,8 +296,8 @@ package(){
 if ! dpkg -s git > /dev/null 2>&1
 then
   setSourcList
-  log.info "正在安装 ${PKG}"
-  until apt install -y ${PKG}
+  log.info "正在安装 git"
+  until apt install -y git
   do
     log.warn "安装失败 3秒后重试"
     sleep 3s
