@@ -1,0 +1,6 @@
+{
+  "TerminalMultiplexer": "tmux",
+  "TitleText": "AstrBot-Shell",
+  "SessionName": "AstrBot",
+  "StartCommand": "uv run main.py"
+}

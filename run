@@ -1,0 +1,21 @@
+#!/bin/env bash
+Path=$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
+source ${Path}/Function/returnError
+
+InstallList=(
+  "package"
+  "python"
+  "gitclone"
+)
+
+for i in ${InstallList[@]}
+do
+  if ! bashInstall/${i}
+  then
+    returnError
+    exit
+  fi
+done
+cp ${Path}/start /usr/local/bin/afab
+sed -i "s|AstrBot_Shell_Home|${Path}|g" /usr/local/bin/afab
+afab

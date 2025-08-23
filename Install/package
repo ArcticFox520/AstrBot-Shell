@@ -1,8 +1,12 @@
 #!/bin/env bash
-import getLocation
-import setColour
-import getFile
+Path=$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
+source ${Path}/../function/import
+
 import log
+import getFile
+import setColour
+import getLocation
+
 Package=("tar" "gzip" "xz-utils" "unzip" "tmux" "wget" "curl" "pv" "git" "jq" "gpg")
 log.info "正在更新 软件源列表"
 apt -y update
@@ -42,7 +46,10 @@ then
   GpgFile="/etc/apt/trusted.gpg.d/deadsnakes-ubuntu-apps.gpg"
   echo ${SourcesListContent} > ${SourcesListFile}
   GpgFileURL="https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xf23c5a6cf475977595c89f51ba6932366a755776"
-  getFile deadsnakes-ubuntu-apps.gpg ${GpgFileURL}
+  if ! getFile deadsnakes-ubuntu-apps.gpg ${GpgFileURL}
+  then
+    exit 1
+  fi
   if [ -e ${GpgFile} ];then
     rm ${GpgFile}
   fi

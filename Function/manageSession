@@ -1,24 +1,55 @@
 function ManageSession(){
 case "$1" in
-  start)
-    tmux new -s "$2" -d "$3" > /dev/null
-    return $?
-  ;;
-  stop)
-    tmux kill-session -t "$2" > /dev/null
-    return $?
-  ;;
-  restart)
-    tmux kill-session -t "$2" && tmux new -s "$2" -d "$3" > /dev/null
-    return $?
-  ;;
-  log)
-    tmux attach -t "$2" > /dev/null
-    return $?
-  ;;
-  list)
-    tmux ls | grep -q "$2"
-    return $?
-  ;;
+tmux)
+  case "$2" in
+    start)
+      tmux new -s "$3" -d "$4" > /dev/null
+      return $?
+    ;;
+    stop)
+      tmux kill-session -t "$3" > /dev/null
+      return $?
+    ;;
+    restart)
+      tmux kill-session -t "$3" && tmux new -s "$3" -d "$4" > /dev/null
+      return $?
+    ;;
+    log)
+      tmux attach -t "$3" > /dev/null
+      return $?
+    ;;
+    list)
+      tmux ls | grep -q "$3"
+      return $?
+    ;;
+  esac
+;;
+screen)
+  case "$2" in
+    start)
+      screen -S "$3" -d -m bash -c "$4"
+      return $?
+      ;;
+    stop)
+      Session=$(screen -ls | grep "$3" | awk '{print $1}')
+      screen -X -S ${Session} quit
+      return $?
+      ;;
+    restart)
+      Session=$(screen -ls | grep "$3" | awk '{print $1}')
+      screen -X -S ${Session} quit && screen -S ${Session} -d -m bash -c "$4"
+      return $?
+      ;;
+    log)
+      Session=$(screen -ls | grep "$3" | awk '{print $1}')
+      screen -r ${Session}
+      return $?
+      ;;
+    list)
+      screen -ls | grep -q "$3"
+      return $?
+      ;;
+  esac
+;;
 esac
 }

@@ -1,11 +1,15 @@
 #!/bin/env bash
-import getLocation
-import setColour
+Path=$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
+source ${Path}/../function/import
+
+import log
 import gitCR
 import getFile
-import log
+import setColour
+import getLocation
+
 log.info "正在克隆 AstrBot"
-if gitCR clone AstrBotDevs/AstrBot
+if gitCR clone master AstrBotDevs/AstrBot
 then
   log.success "克隆成功"
 else

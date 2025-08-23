@@ -1,22 +1,23 @@
 #!/bin/env bash
-import setColour
 import setMenuSize
 import setMsgboxSize
 import setTUISoftware
-import require
-TitleText=AstrBot-Shell
-require startBackground
-require startForeground
-require stopBot
-require restartBot
-require openLog
-require managePlugin
-require updateAll
-#require otherFunction
+
+Path=$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
+# CP: Config Path
+CP="../config.json"
+# TM: Terminal Multiplexer
+TM="$(jq -r .TerminalMultiplexer ${Path}/${CP})"
+# TT: Title Text
+TT="$(jq -r .TitleText ${Path}/${CP})"
+# SN: Session Name
+SN="$(jq -r .SessionName ${Path}/${CP})"
+# SC: Start Command
+SC="$(jq -r .StartCommand ${Path}/${CP})"
 
 function MainMenu(){
 Number=$($(setTUISoftware) \
---title "${TitleText}" \
+--title "$TT" \
 --menu "请选择操作: " \
 $(setMenuSize) \
 "1" "启动运行" \
@@ -24,38 +25,35 @@ $(setMenuSize) \
 "3" "停止运行" \
 "4" "重新启动" \
 "5" "打开日志" \
-"6" "插件管理" \
-"7" "全部更新" \
-"8" "其他功能" \
-"9" "进入bash" \
+"6" "全部更新" \
+"7" "其他功能" \
+"8" "进入bash" \
 "0" "退出菜单" \
 3>&1 1>&2 2>&3)
 case ${Number} in
 startBackground)
-    startBackground
+    source ${Path}/AppFun/startApp SBG
   ;;
 startForeground)
-    startForeground
+    source ${Path}/AppFun/startApp SFG
   ;;
 stopBot)
-    stopBot)
+    source ${Path}/AppFun/stopApp
   ;;
 restartBot)
-    restartBot)
+    source ${Path}/AppFun/restartApp
   ;;
 openLog)
-    openLog)
-  ;;
-managePlugin)
-    managePlugin
+    source ${Path}/AppFun/logApp
   ;;
 updateAll)
-    updateAll
+    source ${Path}/updateAll
   ;;
 otherFunction)
-    $(setTUISoftware) --title "${TitleText}"  \
+    $(setTUISoftware) --title "$TT"  \
     --msgbox "未完工" \
     $(setMsgboxSize)
+    #source ${Path}/otherFunction
   ;;
 enterBash)
     exec bash
