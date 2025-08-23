@@ -62,5 +62,7 @@ else
       return 1
     fi
   done
+  selectLocation
+  return $?
 fi
 }
