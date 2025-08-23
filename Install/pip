@@ -1,0 +1,8 @@
+#!/bin/env bash
+Path=$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
+source ${Path}/../Function/import
+
+import log
+import getFile
+import getLocation
+
