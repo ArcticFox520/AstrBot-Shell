@@ -274,6 +274,7 @@ else
   exit
 fi
 gitCR raw install ArcticFox520/AstrBot-Shell main install
+mv install $HOME/custom
 export custom="$HOME/custom"
 bash AF-Proot/run
 exit
