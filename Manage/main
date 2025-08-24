@@ -18,6 +18,7 @@ SN="$(jq -r .SessionName ${Path}/${CP})"
 SC="$(jq -r .StartCommand ${Path}/${CP})"
 # CFP: Custom Folder Path
 CFP="$(jq -r .CustomFolderPath ${Path}/${CP})"
+CFP="$(eval echo ${CFP})"
 
 function MainMenu(){
 cd ${CFP}
