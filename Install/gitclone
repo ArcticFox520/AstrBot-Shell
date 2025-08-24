@@ -34,8 +34,15 @@ else
   exit 1
 fi
 log.info "正在安装 依赖文件"
-python3 -m venv ./venv
+log.info "正在创建 虚拟环境"
+if python3.10 -m venv ./venv
+then
+  log.success "创建成功"
+else
+  log.error "创建失败"
+fi
 source venv/bin/activate
+pip install --upgrade pip
 if python3.10 -m pip install -r requirements.txt
 then
   log.success "依赖安装成功"
@@ -43,3 +50,4 @@ else
   log.error "依赖安装失败"
   exit 1
 fi
+deactivate

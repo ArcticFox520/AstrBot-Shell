@@ -13,6 +13,7 @@ log.info "开始安装 pip包管理器"
 if python3.10 get-pip.py
 then
   log.success "安装成功"
+  rm get-pip.py
 else
   log.error "安装失败"
   exit 1
@@ -25,9 +26,5 @@ else
   mirror="https://pypi.org/simple"
 fi
 pip config set global.index-url ${mirror}
-if ! pip config set global.index-url ${mirror}
-then
-  log.success "设置成功"
-else
-  log.error "设置失败"
-fi
+pip config set global.index-url ${mirror}
+pip install --upgrade pip

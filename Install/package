@@ -23,6 +23,14 @@ do
     log.success "安装成功"
   fi
 done
+
+if [ ! -x "$(command -v whiptail)" ] && [ ! -x "$(command -v dialog)" ]
+then
+  log.info "正在安装 dialog"
+  apt install -y dialog
+  log.success "安装成功"
+fi
+
 if dpkg -s python3.10 > /dev/null 2>&1
 then
   log.success "Python3.10 已经安装"
@@ -55,7 +63,7 @@ then
   fi
   gpg --dearmor -o ${GpgFile} deadsnakes-ubuntu-apps.gpg
   apt -y update
-  apt install -y python3.10
+  apt install -y python3.10-full
   rm -rf deadsnakes-ubuntu-apps.gpg
 else
   if ! dpkg -s software-properties-common > /dev/null 2>&1
