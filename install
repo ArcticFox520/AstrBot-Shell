@@ -278,6 +278,12 @@ else
   log.error "克隆失败"
   exit
 fi
+echo '{
+  "Linux": "ubuntu",
+  "Version": "noble",
+  "Arch": "arm64",
+  "Variant": "default"
+} ' > AF-Proot/config.json
 gitCR raw install ArcticFox520/${REPO} main install
 mv install $HOME/custom
 export custom="$HOME/custom"
