@@ -9,15 +9,27 @@ import getLocation
 import returnError
 source /etc/profile
 
+# CFP: CustomPath
+CFP="$(jq -r .CustomFolderPath ${Path}/../config.json)"
+CFP="$(eval echo ${CFP})"
+# TF: Target Folder
+TF=$(echo ${CFP} | awk -F '/' '{print $NF}')
+# TD: Target Directory
+TD=$(echo ${CFP} | sed "s|/${TF}||g")
+if [ ! -d ${TD} ]
+then
+  mkdir -p ${TD}
+fi
+cd ${TD}
 log.info "正在克隆 AstrBot"
-if gitCR clone master AstrBotDevs/AstrBot
+if gitCR clone master AstrBotDevs/AstrBot ${TF}
 then
   log.success "克隆成功"
 else
   log.error "克隆失败"
   exit 1
 fi
-cd AstrBot
+cd ${TF}
 gitCR release dist.zip AstrBotDevs/AstrBot dist.zip
 if [ ! -d data ]
 then

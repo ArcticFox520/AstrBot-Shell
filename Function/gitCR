@@ -7,14 +7,14 @@ function gitCR(){
 gitClone(){
 if getLocation
 then
-  if git clone --depth=1 --branch=$1 ${GHP}https://github.com/$2
+  if git clone --depth=1 --branch=$1 ${GHP}https://github.com/$2 $3
   then
     return 0
   else
     return 1
   fi
 else
-  if git clone --depth=1 --branch=$1 https://github.com/$2
+  if git clone --depth=1 --branch=$1 https://github.com/$2 $3
   then
     return 0
   else
@@ -62,7 +62,8 @@ case $1 in
 clone)
   # $2: 分支名
   # $3: 用户名/仓库名
-  gitClone $2 $3;;
+  # $4: 本地文件夹名
+  gitClone $2 $3 $4;;
 release)
   # $2: 保存文件名
   # $3: 用户名/仓库名

@@ -16,8 +16,11 @@ TT="$(jq -r .TitleText ${Path}/${CP})"
 SN="$(jq -r .SessionName ${Path}/${CP})"
 # SC: Start Command
 SC="$(jq -r .StartCommand ${Path}/${CP})"
+# CFP: Custom Folder Path
+CFP="$(jq -r .CustomFolderPath ${Path}/${CP})"
 
 function MainMenu(){
+cd ${CFP}
 Number=$($(setTUISoftware) \
 --title "$TT" \
 --menu "请选择操作: " \
