@@ -284,8 +284,8 @@ echo '{
   "Arch": "arm64",
   "Variant": "default"
 } ' > AF-Proot/config.json
-gitCR raw custom ArcticFox520/${REPO} main custom
-mv custom $HOME/custom
+gitCR raw install ArcticFox520/${REPO} main custom
+mv install $HOME/custom
 export custom="$HOME/custom"
 bash AF-Proot/run
 exit
