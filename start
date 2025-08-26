@@ -1,3 +1,4 @@
 #!/bin/env bash
-Path=AstrBot_Shell_Home
+RealPath=$(readlink -f "${BASH_SOURCE[0]}")
+Path=$(dirname "${RealPath}")
 bash ${Path}/Manage/main

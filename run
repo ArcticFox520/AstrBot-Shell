@@ -17,7 +17,6 @@ do
     exit
   fi
 done
-cp -f ${Path}/start /usr/local/bin/afab
-sed -i "s|AstrBot_Shell_Home|${Path}|g" /usr/local/bin/afab
+ln -sf ${Path}/start /usr/local/bin/afab
 chmod +x /usr/local/bin/afab
 afab
